@@ -15,7 +15,7 @@ echo "### Install zerotier and join network ###"
 
 curl -s https://install.zerotier.com | sudo bash
 sudo zerotier-cli start
-sudo zerotier-cli join “$NETWORK_ID”
+sudo zerotier-cli join "$NETWORK_ID"
 
 echo "### Update user: $USER password ###"
 echo -e "$USER_PASS\n$USER_PASS" | sudo passwd "$USER"
