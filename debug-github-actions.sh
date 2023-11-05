@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-if [[ -z "$NGROK_TOKEN" ]]; then
-  echo "Please set 'NGROK_TOKEN'"
+if [[ -z "$NETWORK_ID" ]]; then
+  echo "Please set 'NETWORK_ID'"
   exit 2
 fi
 
@@ -11,31 +11,24 @@ if [[ -z "$USER_PASS" ]]; then
   exit 3
 fi
 
-echo "### Install ngrok ###"
+echo "### Install zerotier and join network ###"
 
-#wget -q https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.zip
-unzip ngrok-stable-linux-386.zip
-chmod +x ./ngrok
+curl -s https://install.zerotier.com | sudo bash
+sudo zerotier-cli start
+sudo zerotier-cli join “$NETWORK_ID”
 
 echo "### Update user: $USER password ###"
 echo -e "$USER_PASS\n$USER_PASS" | sudo passwd "$USER"
 
-echo "### Start ngrok proxy for 22 port ###"
+sleep 20
+#HAS_ERRORS=$(grep "command failed" < .ngrok.log)
 
-
-rm -f .ngrok.log
-./ngrok authtoken "$NGROK_TOKEN"
-./ngrok tcp 22 --log ".ngrok.log" &
-
-sleep 10
-HAS_ERRORS=$(grep "command failed" < .ngrok.log)
-
-if [[ -z "$HAS_ERRORS" ]]; then
-  echo ""
-  echo "=========================================="
-  echo "To connect: $(grep -o -E "tcp://(.+)" < .ngrok.log | sed "s/tcp:\/\//ssh $USER@/" | sed "s/:/ -p /")"
-  echo "=========================================="
-else
-  echo "$HAS_ERRORS"
-  exit 4
-fi
+#if [[ -z "$HAS_ERRORS" ]]; then
+#  echo ""
+#  echo "=========================================="
+3  echo "To connect: $(grep -o -E "tcp://(.+)" < .ngrok.log | sed "s/tcp:\/\//ssh $USER@/" | sed "s/:/ -p /")"
+#  echo "=========================================="
+#else
+#  echo "$HAS_ERRORS"
+#  exit 4
+#fi
