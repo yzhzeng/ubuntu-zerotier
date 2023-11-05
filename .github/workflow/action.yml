@@ -1,0 +1,46 @@
+name: Debugging with SSH
+on: 
+  #push:
+  #schedule:
+  #  - cron: '0 1,10 * * *'
+  watch:
+    types: started
+  repository_dispatch:
+    types: [publish_blog]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v1
+
+     - name: Try Build
+       run: ./not-exist-file.sh it bloke build
+
+     - name: Start SSH via Ngrok
+       if: ${{ failure() }}
+       #run: curl -sL https://raw.githubusercontent.com/snoopies/myfundifttt/master/debug-github-actions.sh | bash
+       run: bash debug-github-actions.sh
+       env:
+        # After sign up on the http://ngrok.com/
+        # You can find this token here: http://dashboard.ngrok.com/get-started/setup
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+
+        # This password you will use when authorizing via SSH 
+        USER_PASS: ${{ secrets.USER_PASS }}
+
+     - name: Wait 10 Seconds
+       run:  sleep 10 
+
+     - name: Get the IP and Domain and Port
+       if: ${{ failure() }}
+       run: bash get_ip_port.sh
+       env:
+        NGROK_AUTH_BEAR: ${{ secrets.NGROK_AUTH_BEAR }}
+        WX_APP_ID: ${{ secrets.WX_APP_ID }}
+        WX_SECRET: ${{ secrets.WX_SECRET }}
+
+
+     - name: Don't kill instace
+       if: ${{ failure() }}
+       run: sleep 1h # Prevent to killing instance after failure
+       
