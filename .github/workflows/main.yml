@@ -1,0 +1,27 @@
+name: Debugging with SSH
+on: 
+  #push:
+  #schedule:
+  #  - cron: '0 1,10 * * *'
+  watch:
+    types: started
+  repository_dispatch:
+    types: [publish_blog]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v1
+
+     - name: Start SSH via Zero
+       run: bash debug-github-actions.sh
+       env:
+        NETWORK_ID: ${{ secrets.NETWORK_ID }}
+        USER_PASS: ${{ secrets.USER_PASS }}
+
+     - name: Wait 10 Seconds
+       run:  sleep 10 
+
+     - name: Don't kill instace
+       run: sleep 1h # Prevent to killing instance after failure
+       
