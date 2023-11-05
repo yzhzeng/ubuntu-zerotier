@@ -26,7 +26,7 @@ sleep 20
 #if [[ -z "$HAS_ERRORS" ]]; then
 #  echo ""
 #  echo "=========================================="
-3  echo "To connect: $(grep -o -E "tcp://(.+)" < .ngrok.log | sed "s/tcp:\/\//ssh $USER@/" | sed "s/:/ -p /")"
+#  echo "To connect: $(grep -o -E "tcp://(.+)" < .ngrok.log | sed "s/tcp:\/\//ssh $USER@/" | sed "s/:/ -p /")"
 #  echo "=========================================="
 #else
 #  echo "$HAS_ERRORS"
