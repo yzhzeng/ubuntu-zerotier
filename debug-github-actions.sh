@@ -19,10 +19,10 @@ sudo zerotier-cli join "$NETWORK_ID"
 
 echo "### Update user: $USER password ###"
 echo -e "$USER_PASS\n$USER_PASS" | sudo passwd "$USER"
-
+sleep 20
 sudo ifconfig ztwfuijnog 192.168.196.205 netmask 255.255.255.0
 
-sleep 20
+sleep 10
 #HAS_ERRORS=$(grep "command failed" < .ngrok.log)
 
 #if [[ -z "$HAS_ERRORS" ]]; then
