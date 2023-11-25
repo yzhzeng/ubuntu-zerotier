@@ -23,5 +23,6 @@ jobs:
        run:  sleep 10 
 
      - name: Don't kill instace
-       run: sleep 1h # Prevent to killing instance after failure
+       #run: sleep 1h # Prevent to killing instance after failure
+       uses: snoopies/action-tmate@master
        
